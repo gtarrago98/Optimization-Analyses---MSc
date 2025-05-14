@@ -16,3 +16,122 @@ library(fmsb)
 library(png)
 library(magick)
 
+# Evaluating the effect of progressive budget increases on objectives/ ecosystem services 
+
+{
+  parques <- read_xlsx("dados/parques_São_Paulo_4.0.xlsx")
+
+# Evaluating the effect of progressive budget increases on objectives / ecosystem services 
+
+{
+  parques <- read_xlsx("C:/Users/gtarr/OneDrive/Mestrado/GIS_Data/Data/Apt_comite/parques_São_Paulo_4.0.xlsx")
+  
+  
+  # Function to organize list
+  
+  order_df <- function(dir){
+    
+    arquivos_crs <- list.files(path = dir, pattern = "*.csv", full.names = TRUE)
+    
+    list <- lapply(arquivos_crs, read.table, header = TRUE, sep = ",")
+    
+    names(list) <- basename(arquivos_crs)
+    
+    numeros <- as.numeric(gsub(".*_(\\d+(\\.\\d+)?)mi\\.csv$", "\\1", names(list)))
+    
+    ordem <- order(numeros)
+    
+    list <- list[ordem]
+    
+    return(list)
+    
+  }
+  
+  
+  # Normalization function
+  
+  normalize <- function(x) {
+    return ((x - min(x)) / (max(x) - min(x)))
+  }
+  
+  
+  colour <- c("#1e9a6f","darkgoldenrod1","#6271FF","#e64949","blue4", "chartreuse", "#f668b3")
+  
+  dolar <- 5.4
+  
+  
+  # Function to create dataframe
+  
+  
+  sum_service <- function(list) {
+    
+    crs_value <- vector("numeric", length(list))
+    wps_value <- vector("numeric", length(list))
+    rcs_value <- vector("numeric", length(list))
+    crs_provision <- vector("numeric", length(list))
+    wps_provision <- vector("numeric", length(list))
+    rcs_provision <- vector("numeric", length(list))
+    sum_cost <- vector("numeric", length(list))
+    combined_provision <- vector("numeric", length(list))
+    cost_benefit <- vector("numeric", length(list))
+    vegetation <- vector("numeric", length(list))
+    n_parks <- vector("numeric", length(list))
+    cr_deman <- vector("numeric", length(list))
+    rc_deman <- vector("numeric", length(list))
+    wp_deman <- vector("numeric", length(list))
+    
+    for (i in seq_along(list)) {
+      
+      crs <- sum(list[[i]]$CR_supply, na.rm = TRUE)
+      wps <- sum(list[[i]]$WP_supply, na.rm = TRUE)
+      rc <- sum(list[[i]]$RC_supply, na.rm = TRUE)
+      p_crs <- sum((list[[i]]$CR_deman * list[[i]]$CR_supply), na.rm = TRUE)
+      p_wps <- sum((list[[i]]$WP_deman * list[[i]]$WP_supply), na.rm = TRUE)
+      p_rcs <- sum((list[[i]]$RC_deman * list[[i]]$RC_supply), na.rm = TRUE)
+      s_cost <- sum(list[[i]]$Costs)
+      p_combined <- sum((list[[i]]$CRP_norm + list[[i]]$WPP_norm + list[[i]]$RCP_norm), na.rm = TRUE)
+      cos_ben <-  sum((list[[i]]$CRP_norm + list[[i]]$WPP_norm + list[[i]]$RCP_norm)/list[[i]]$Cost_nor_1, na.rm = TRUE)
+      veg <- sum(list[[i]]$area_veg_m)
+      parks <- nrow(list[[i]])
+      deman_cr <- sum(list[[i]]$CR_deman, na.rm = TRUE)
+      deman_wp <- sum(list[[i]]$WP_deman, na.rm = TRUE)
+      deman_rc <- sum(list[[i]]$RC_deman, na.rm = TRUE)
+      
+      crs_value[i] <- crs
+      wps_value[i] <- wps
+      rcs_value[i] <- rc
+      crs_provision[i] <- p_crs
+      wps_provision[i] <- p_wps
+      rcs_provision[i] <- p_rcs
+      sum_cost[i] <- s_cost
+      combined_provision[i] <- p_combined
+      cost_benefit[i] <- cos_ben
+      vegetation[i] <- veg
+      n_parks[i] <- parks
+      cr_deman[i] <- deman_cr
+      wp_deman[i] <- deman_wp
+      rc_deman[i] <- deman_rc
+      
+    }
+    
+    
+    
+    scenario_names <- sub("\\.csv$", "", names(list))
+    
+    numeros <- as.numeric(gsub(".*_(\\d+(\\.\\d+)?)mi\\.csv$", "\\1", names(list)))
+    
+    df <- data.frame(scenario = scenario_names, budget = numeros, "Nº Parks" = n_parks, cost = sum_cost, CRS_Supply = crs_value, WPS_Supply = wps_value, RC_Supply = rcs_value,
+                     CRS_Provision = crs_provision, WPS_provision = wps_provision,RCS_provision = rcs_provision, Combined_provision = combined_provision,Cost_Benefit = cost_benefit, Vegetation = vegetation, CR_deman = cr_deman, WP_deman = wp_deman, RC_deman = rc_deman)
+    
+    return(df)
+  }
+  
+}
+
+
+
+
+  
+  
+  
+  
