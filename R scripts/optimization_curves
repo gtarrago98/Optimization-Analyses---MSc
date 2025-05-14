@@ -1,1 +1,18 @@
-# This code was used to generate optimization curves for the prioritization results, considering two constraints: limited budget and number of parks.
+# This code was used to generate optimization curves for the prioritization results, considering two constraints: limited budget and number of parks
+
+library(readxl)
+library(writexl)
+library(ggplot2)
+library(viridis)
+library(scales)
+library(corrplot)
+library(DHARMa)
+library(sf)
+library(tidyr)
+library(dplyr)
+library(gridExtra)
+library(plotly)
+library(fmsb)
+library(png)
+library(magick)
+
