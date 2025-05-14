@@ -1,4 +1,4 @@
-# This code was used to generate optimization curves for the prioritization results, considering a limited budgettwo as constraints
+# This code was used to generate optimization curves for the prioritization results, considering a limited budget as constraints
 
 library(readxl)
 library(writexl)
