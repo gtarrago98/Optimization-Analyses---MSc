@@ -1,6 +1,6 @@
 ```r
 
-# This code was used to generate optimization curves for the prioritization results, considering two constraints: limited budget and number of parks
+# This code was used to generate optimization curves for the prioritization results
 
 library(readxl)
 library(writexl)
@@ -22,12 +22,6 @@ library(magick)
 
 {
   parques <- read_xlsx("dados/parques_São_Paulo_4.0.xlsx")
-
-# Evaluating the effect of progressive budget increases on objectives / ecosystem services 
-
-{
-  parques <- read_xlsx("C:/Users/gtarr/OneDrive/Mestrado/GIS_Data/Data/Apt_comite/parques_São_Paulo_4.0.xlsx")
-  
   
   # Function to organize list
   
